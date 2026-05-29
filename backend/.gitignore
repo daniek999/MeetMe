@@ -1,0 +1,26 @@
+# Dependencias
+node_modules/
+build/
+dist/
+
+# Entorno
+.env
+.env.local
+
+# Prisma
+prisma/generated/
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Logs
+npm-debug.log*
+logs/
+*.log
+
+# Editor (VS Code)
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

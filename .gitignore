@@ -1,0 +1,11 @@
+# Directorios
+_docs/
+
+# Editor
+.vscode/
+.idea/
+
+# Sistema
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/

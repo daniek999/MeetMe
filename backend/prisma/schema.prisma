@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ─── Enumeradores ─────────────────────────────────────
+
+enum UserRole {
+  user
+  admin
+}
+
+enum UserStatus {
+  enabled
+  suspended
+  banned
+}
+
+enum StatisticMeterType {
+  like
+  follow
+}
+
+// ─── Entidades ────────────────────────────────────────
+
+model User {
+  id          Int        @id @default(autoincrement())
+  username    String     @unique @db.VarChar(50)
+  displayName String?    @db.VarChar(100)
+  email       String     @unique @db.VarChar(100)
+  password    String     @db.VarChar(255)
+  bio         String?    @db.VarChar(255)
+  content     String?    @db.Text
+  avatarUrl   String?    @db.Text
+  bannerUrl   String?    @db.Text
+  role        UserRole   @default(user)
+  status      UserStatus @default(enabled)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  social          Social?
+  statistic       Statistic?
+  theme           Theme?
+  actionsGiven    StatisticMeter[] @relation("Origin")
+  actionsReceived StatisticMeter[] @relation("Destiny")
+}
+
+model Social {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  youtubeUrl   String?  @db.Text
+  twitterUrl   String?  @db.Text
+  patreonUrl   String?  @db.Text
+  discordUrl   String?  @db.Text
+  instagramUrl String?  @db.Text
+  twitchUrl    String?  @db.Text
+  linkedinUrl  String?  @db.Text
+  websiteUrl   String?  @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Statistic {
+  id      Int @id @default(autoincrement())
+  userId  Int @unique
+  views   Int @default(0)
+  likes   Int @default(0)
+  follows Int @default(0)
+  shares  Int @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Theme {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique
+  primaryColor    String   @default("#000000") @db.VarChar(7)
+  backgroundColor String   @default("#ffffff") @db.VarChar(7)
+  fontFamily      String   @default("Inter") @db.VarChar(100)
+  layout          String   @default("classic") @db.VarChar(50)
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model StatisticMeter {
+  id            Int                @id @default(autoincrement())
+  userOriginId  Int
+  userDestinyId Int
+  type          StatisticMeterType
+  createdAt     DateTime           @default(now())
+
+  userOrigin  User @relation("Origin", fields: [userOriginId], references: [id])
+  userDestiny User @relation("Destiny", fields: [userDestinyId], references: [id])
+
+  @@unique([userOriginId, userDestinyId, type])
+}
