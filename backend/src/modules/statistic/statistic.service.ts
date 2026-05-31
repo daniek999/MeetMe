@@ -1,10 +1,22 @@
 // src/modules/statistic/statistic.service.ts
+import { statisticRepository } from "./statistic.repository";
+import { userRepository } from "../user/user.repository";
 import { StatisticMeterType } from "../../../prisma/generated/prisma/enums";
-import { prisma } from "../../../prisma/lib/prisma";
 
-// ─── Servicios ────────────────────────────────────────
 export function statisticService() {
-  const toggleLikeService = async (
+  // -- Repositories
+  const { readById } = userRepository();
+  const {
+    createInteraction,
+    deleteInteraction,
+    readInteraction,
+    readInteractionsStatus,
+    readPublicStatistic,
+    updateStatistic,
+  } = statisticRepository();
+
+  // -- Services
+  const postLikeService = async (
     userOriginId: number,
     userDestinyId: number,
   ) => {
@@ -14,8 +26,7 @@ export function statisticService() {
       StatisticMeterType.like,
     );
   };
-
-  const toggleFollowService = async (
+  const postFollowService = async (
     userOriginId: number,
     userDestinyId: number,
   ) => {
@@ -25,127 +36,96 @@ export function statisticService() {
       StatisticMeterType.follow,
     );
   };
+  const postShareService = async (userDestinyId: number) => {
+    const destiny = await readById(userDestinyId);
+    if (!destiny) {
+      throw new Error("Usuario no encontrado");
+    }
 
-  // Share: no tiene unicidad, solo incrementa el contador
-  const shareService = async (userDestinyId: number) => {
-    const destiny = await prisma.user.findUnique({
-      where: { id: userDestinyId },
-    });
-    if (!destiny) throw new Error("User not found");
+    const item = await updateStatistic(userDestinyId);
+    if (!item) {
+      throw new Error("Error al compartir el perfil.");
+    }
 
-    await prisma.statistic.update({
-      where: { userId: userDestinyId },
-      data: { shares: { increment: 1 } },
-    });
-
-    return { shared: true };
+    return {
+      success: true,
+      message: "Usuario compartido exitosamente.",
+      data: { item },
+    };
   };
-
-  // Ver estadísticas de un perfil (público)
   const getStatisticService = async (username: string) => {
-    const user = await prisma.user.findUnique({
-      where: { username },
-      select: { statistic: true },
-    });
+    const item = await readPublicStatistic(username);
+    if (!item) {
+      throw new Error("Usuario no encontrado");
+    }
 
-    if (!user) throw new Error("User not found");
-
-    return user.statistic;
+    return {
+      success: true,
+      message: "Estadisticas de usuario obtenidas exitosamente.",
+      data: { item },
+    };
   };
-
-  // Ver si el usuario autenticado ya dio like/follow a un perfil
   const getInteractionStatusService = async (
     userOriginId: number,
     userDestinyId: number,
   ) => {
-    const [like, follow] = await Promise.all([
-      prisma.statisticMeter.findUnique({
-        where: {
-          userOriginId_userDestinyId_type: {
-            userOriginId,
-            userDestinyId,
-            type: StatisticMeterType.like,
-          },
-        },
-      }),
-      prisma.statisticMeter.findUnique({
-        where: {
-          userOriginId_userDestinyId_type: {
-            userOriginId,
-            userDestinyId,
-            type: StatisticMeterType.follow,
-          },
-        },
-      }),
-    ]);
+    const item = await readInteractionsStatus(userOriginId, userDestinyId);
+    if (!item) {
+      throw new Error("Error al obtener las interacciones con el usuario.");
+    }
 
     return {
-      liked: !!like,
-      followed: !!follow,
+      success: true,
+      message: "Interacciones con el usuario obtenidas exitosamente.",
+      data: { item },
     };
   };
 
+  // -- Helpers
+  const toggleInteraction = async (
+    userOriginId: number,
+    userDestinyId: number,
+    type: StatisticMeterType,
+  ) => {
+    if (userOriginId === userDestinyId) {
+      throw new Error(`No puedes '${type}' tu propio perfil.`);
+    }
+
+    const destiny = await readById(userDestinyId);
+    if (!destiny) {
+      throw new Error("Usuario no encontrado.");
+    }
+
+    const existing = await readInteraction(userOriginId, userDestinyId, type);
+
+    const counterField = type === StatisticMeterType.like ? "likes" : "follows";
+
+    if (existing) {
+      await deleteInteraction(existing.id, userDestinyId, counterField);
+
+      return {
+        success: true,
+        message: "Interacción removida exitosamente.",
+        data: { item: { active: false, type } },
+      };
+    }
+
+    if (!existing) {
+      await createInteraction(userOriginId, userDestinyId, type, counterField);
+      return {
+        success: true,
+        message: "Interacción generada exitosamente.",
+        data: { item: { active: true, type } },
+      };
+    }
+  };
+
+  // -- Exports
   return {
-    toggleLikeService,
-    toggleFollowService,
-    shareService,
+    postLikeService,
+    postFollowService,
+    postShareService,
     getStatisticService,
     getInteractionStatusService,
   };
 }
-
-// ─── Helpers ──────────────────────────────────────────
-const toggleInteraction = async (
-  userOriginId: number,
-  userDestinyId: number,
-  type: StatisticMeterType,
-) => {
-  // Lógica compartida para like y follow (toggle)
-
-  if (userOriginId === userDestinyId) {
-    throw new Error(`You cannot ${type} your own profile`);
-  }
-
-  const destiny = await prisma.user.findUnique({
-    where: { id: userDestinyId },
-  });
-  if (!destiny) throw new Error("User not found");
-
-  const existing = await prisma.statisticMeter.findUnique({
-    where: {
-      userOriginId_userDestinyId_type: {
-        userOriginId,
-        userDestinyId,
-        type,
-      },
-    },
-  });
-
-  const counterField = type === StatisticMeterType.like ? "likes" : "follows";
-
-  // Si ya existe => quitar la interacción (toggle off)
-  if (existing) {
-    await prisma.$transaction([
-      prisma.statisticMeter.delete({ where: { id: existing.id } }),
-      prisma.statistic.update({
-        where: { userId: userDestinyId },
-        data: { [counterField]: { decrement: 1 } },
-      }),
-    ]);
-
-    return { active: false, type };
-  }
-
-  // Si no existe => crear la interacción (toggle on)
-  await prisma.$transaction([
-    prisma.statisticMeter.create({
-      data: { userOriginId, userDestinyId, type },
-    }),
-    prisma.statistic.update({
-      where: { userId: userDestinyId },
-      data: { [counterField]: { increment: 1 } },
-    }),
-  ]);
-
-  return { active: true, type };
-};

@@ -1,110 +1,91 @@
 // src/modules/user/user.service.ts
+import { userRepository } from "./user.repository";
 import { UserStatus } from "../../../prisma/generated/prisma/enums";
-import { prisma } from "../../../prisma/lib/prisma";
 import { UpdateProfileInput } from "./user.type";
 
-// ─── Tipos ────────────────────────────────────────────
-
-// ─── Servicios ────────────────────────────────────────
 export function userService() {
-  const getMyProfileService = async (userId: number) => {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        username: true,
-        displayName: true,
-        email: true,
-        bio: true,
-        content: true,
-        avatarUrl: true,
-        bannerUrl: true,
-        role: true,
-        status: true,
-        createdAt: true,
-        social: true,
-        statistic: true,
-        theme: true,
-      },
-    });
+  // -- Repositories
+  const {
+    createVisualization,
+    readPublicByUsername,
+    readById,
+    readSelfById,
+    updateUser,
+    updateUserStatus,
+  } = userRepository();
 
-    if (!user) throw new Error("User not found");
+  // -- Services
+  const getSelfProfileService = async (userId: number) => {
+    const item = await readSelfById(userId);
+    if (!item) {
+      throw new Error("Usuario no encontrado");
+    }
 
-    return user;
+    return {
+      success: true,
+      message: "Perfil encontrado exitosamente.",
+      data: { item },
+    };
   };
-
-  // Perfil público de cualquier usuario por username
   const getPublicProfileService = async (username: string) => {
-    const user = await prisma.user.findUnique({
-      where: { username },
-      select: {
-        id: true,
-        username: true,
-        displayName: true,
-        bio: true,
-        content: true,
-        avatarUrl: true,
-        bannerUrl: true,
-        social: true,
-        statistic: true,
-        theme: true,
-      },
-    });
+    const item = await readPublicByUsername(username);
+    if (!item) {
+      throw new Error("Usuario no encontrado");
+    }
 
-    if (!user) throw new Error("User not found");
+    await createVisualization(item.id); // Incrementar views cada vez que se visita el perfil público
 
-    // Incrementar views cada vez que se visita el perfil público
-    await prisma.statistic.update({
-      where: { userId: user.id },
-      data: { views: { increment: 1 } },
-    });
-
-    return user;
+    return {
+      success: true,
+      message: "Usuario encontrado exitosamente.",
+      data: { item },
+    };
   };
+  const patchUserService = async (userId: number, body: UpdateProfileInput) => {
+    const { avatarUrl, bannerUrl, bio, content, displayName } = body;
 
-  // Actualizar perfil propio
-  const updateProfileService = async (
-    userId: number,
-    input: UpdateProfileInput,
-  ) => {
-    const user = await prisma.user.update({
-      where: { id: userId },
-      data: { ...input },
-      select: {
-        id: true,
-        username: true,
-        displayName: true,
-        bio: true,
-        content: true,
-        avatarUrl: true,
-        bannerUrl: true,
-      },
-    });
+    const item = await updateUser(userId, body);
+    if (!item) {
+      throw new Error("Error al actualiza el usuario.");
+    }
 
-    return user;
+    return {
+      success: true,
+      message: "Cuenta actualizada correctamente.",
+      data: { item },
+    };
   };
-
-  // Cambiar status de un usuario (solo admin)
-  const updateUserStatusService = async (
+  const patchUserStatusService = async (
     targetId: number,
     status: UserStatus,
   ) => {
-    const user = await prisma.user.findUnique({ where: { id: targetId } });
-    if (!user) throw new Error("User not found");
+    const validStatuses = Object.values(UserStatus);
+    if (!validStatuses.includes(status)) {
+      throw new Error("Estado inválido.");
+    }
 
-    const updated = await prisma.user.update({
-      where: { id: targetId },
-      data: { status },
-      select: { id: true, username: true, status: true },
-    });
+    const verifyUser = await readById(targetId);
+    if (!verifyUser) {
+      throw new Error("Usuario no encontrado.");
+    }
 
-    return updated;
+    const item = await updateUserStatus(targetId, status);
+    if (!item) {
+      throw new Error("Error al actualizar el estado del usuario.");
+    }
+
+    return {
+      success: true,
+      message: "Cuenta actualizada correctamente.",
+      data: { item },
+    };
   };
 
+  // -- Exports
   return {
-    getMyProfileService,
+    getSelfProfileService,
     getPublicProfileService,
-    updateProfileService,
-    updateUserStatusService,
+    patchUserService,
+    patchUserStatusService,
   };
 }

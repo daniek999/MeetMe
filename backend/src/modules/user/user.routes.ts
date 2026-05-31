@@ -5,16 +5,16 @@ import { roleMiddleware } from "../../middlewares/role.middleware.js";
 import { userController } from "./user.controller.js";
 
 const userRouter = Router();
-const { getMyProfile, getPublicProfile, updateProfile, updateUserStatus } =
+const { findMyProfile, findPublicProfile, updateUser, updateUserStatus } =
   userController();
 
-userRouter.get("/me", authMiddleware, getMyProfile);
-userRouter.get("/:username", getPublicProfile);
-userRouter.patch("/me", authMiddleware, updateProfile);
+userRouter.get("/me", authMiddleware, findMyProfile);
+userRouter.get("/:username", findPublicProfile);
+userRouter.patch("/me", authMiddleware, updateUser);
 userRouter.patch(
   "/:id/status",
   authMiddleware,
-  roleMiddleware("admin"),
+  roleMiddleware(["admin"]),
   updateUserStatus,
 );
 

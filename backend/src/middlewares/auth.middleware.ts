@@ -2,10 +2,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-interface JwtPayload {
-  id: number;
-}
-
 declare global {
   namespace Express {
     interface Request {
@@ -19,23 +15,44 @@ export const authMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({ message: "No token provided" });
-    return;
+  const authHeader: string | undefined = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      success: false,
+      message: "Autorización no proporcionada.",
+      data: null,
+    });
   }
 
-  const token = authHeader.split(" ")[1];
-  const secret = process.env.JWT_SECRET;
+  const parts = authHeader.split(" ");
+  if (parts.length !== 2) {
+    return res.status(401).json({
+      success: false,
+      message: "Formato de token inválido.",
+      data: null,
+    });
+  }
 
-  if (!secret) throw new Error("JWT_SECRET is not defined");
+  const [type, token] = parts;
+  if (type !== "Bearer") {
+    return res.status(401).json({
+      success: false,
+      message: "Formato de autorizacion inválido.",
+      data: null,
+    });
+  }
 
   try {
-    const decoded = jwt.verify(token, secret) as JwtPayload;
+    const secret = process.env.JWT_SECRET!;
+    const decoded = jwt.verify(token, secret) as { id: number };
     req.userId = decoded.id;
-    next();
   } catch {
-    res.status(401).json({ message: "Invalid or expired token" });
+    return res.status(401).json({
+      success: false,
+      message: "Token inválido o expirado.",
+      data: null,
+    });
+  } finally {
+    next();
   }
 };

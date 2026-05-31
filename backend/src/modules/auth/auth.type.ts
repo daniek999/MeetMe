@@ -1,4 +1,4 @@
-// src/modules/auth/auth.type.ts
+// modules/auth/auth.type.ts
 
 export interface RegisterInput {
   username: string;

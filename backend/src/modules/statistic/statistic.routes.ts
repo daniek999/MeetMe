@@ -1,7 +1,7 @@
 // src/modules/statistic/statistic.routes.ts
+import { statisticController } from "./statistic.controller.js";
 import { Router } from "express";
 import { authMiddleware } from "../../middlewares/auth.middleware.js";
-import { statisticController } from "./statistic.controller.js";
 
 const statisticRoute = Router();
 const { getInteractionStatus, getStatistic, share, toggleFollow, toggleLike } =

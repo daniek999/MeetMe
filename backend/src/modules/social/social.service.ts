@@ -1,28 +1,43 @@
 // src/modules/social/social.service.ts
-import { prisma } from "../../../prisma/lib/prisma";
+import { socialRepository } from "./social.repository";
 import { UpdateSocialInput } from "./social.type";
 
-// ─── Servicios ────────────────────────────────────────
 export function socialService() {
+  // -- Repositories
+  const { readSocialByUserId, updateSocialByUserId } = socialRepository();
+
+  // -- Services
   const getSocialService = async (userId: number) => {
-    const social = await prisma.social.findUnique({ where: { userId } });
-    if (!social) throw new Error("Social not found");
-    return social;
-  };
+    const item = await readSocialByUserId(userId);
+    if (!item) {
+      throw new Error("Social no encontrado.");
+    }
 
-  const updateSocialService = async (
+    return {
+      success: true,
+      message: "Sociales actualizado correctamente..",
+      data: { item },
+    };
+  };
+  const patchSocialService = async (
     userId: number,
-    input: UpdateSocialInput,
+    body: UpdateSocialInput,
   ) => {
-    const social = await prisma.social.update({
-      where: { userId },
-      data: { ...input },
-    });
-    return social;
+    const item = await updateSocialByUserId(userId, body);
+    if (!item) {
+      throw new Error("Error al actualizar el social.");
+    }
+
+    return {
+      success: true,
+      message: "Sociales actualizado correctamente..",
+      data: { item },
+    };
   };
 
+  // -- Exports
   return {
     getSocialService,
-    updateSocialService,
+    patchSocialService,
   };
 }

@@ -1,96 +1,112 @@
 // src/modules/auth/auth.service.ts
+import { authRepository } from "./auth.repository";
+import { userRepository } from "../user/user.repository";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { prisma } from "../../../prisma/lib/prisma";
 import { LoginInput, RegisterInput } from "./auth.type";
 
-// ─── Servicios ────────────────────────────────────────
 export function authService() {
-  const registerService = async (input: RegisterInput) => {
-    const { username, email, password } = input;
+  // -- Repositories
+  const { authRegister, authLogin } = authRepository();
+  const { readByEmail, readByUsername } = userRepository();
 
-    // Verificar duplicados
-    const existing = await prisma.user.findFirst({
-      where: { OR: [{ email }, { username }] },
-    });
-
-    if (existing) {
-      const field = existing.email === email ? "email" : "username";
-      throw new Error(`That ${field} is already taken`);
+  // -- Services
+  const registerService = async (body: RegisterInput) => {
+    const { username, email, password } = body;
+    if (!username || !email || !password) {
+      throw new Error(`Todos los campos son requeridos.`);
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const existingEmail = await readByEmail(email);
+    if (existingEmail) {
+      throw new Error(`El correo ya esta registrado.`);
+    }
 
-    // Crear usuario + registros relacionados en una transacción
-    const user = await prisma.$transaction(async (tx) => {
-      const newUser = await tx.user.create({
-        data: {
-          username,
-          email: email.toLowerCase(),
-          password: passwordHash,
+    const existingUsername = await readByUsername(username);
+    if (existingUsername) {
+      throw new Error("El nombre de usuario ya esta registrado.");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await authRegister({ ...body, password: hashedPassword });
+    if (!user) {
+      throw new Error("Error al registrar al usuario.");
+    }
+
+    const token = await generateToken(user.id);
+    if (!token) {
+      throw new Error("Error al generar tu token.");
+    }
+
+    return {
+      success: true,
+      message: "Registro exitoso.",
+      data: {
+        item: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          role: user.role,
         },
-      });
-
-      await tx.social.create({ data: { userId: newUser.id } });
-      await tx.statistic.create({ data: { userId: newUser.id } });
-      await tx.theme.create({ data: { userId: newUser.id } });
-
-      return newUser;
-    });
-
-    const token = generateToken(user.id);
-
-    return {
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
+        token,
       },
     };
   };
-  const loginService = async (input: LoginInput) => {
-    const { email, password } = input;
-
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
-    });
-
-    if (!user) throw new Error("Invalid credentials");
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error("Invalid credentials");
-
-    if (user.status !== "enabled") {
-      throw new Error(`Account is ${user.status}`);
+  const loginService = async (body: LoginInput) => {
+    const { email, password } = body;
+    if (!email || !password) {
+      throw new Error(`Todos los campos son requeridos.`);
     }
 
-    const token = generateToken(user.id);
+    const user = await authLogin({ ...body, email: email.toLowerCase() });
+    if (!user) {
+      throw new Error("Credenciales incorrectas.");
+    }
+    if (user.status !== "enabled") {
+      throw new Error(`Tu cuenta esta deshabilitada.`);
+    }
+
+    const isMatch = await comparePassword(password, user.password);
+    if (!isMatch) {
+      throw new Error("Clave incorrecta.");
+    }
+
+    const token = await generateToken(user.id);
+    if (!token) {
+      throw new Error("Error al generar tu token.");
+    }
 
     return {
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
+      success: true,
+      message: "Inicio de Sesión exitoso.",
+      data: {
+        item: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+        },
+        token,
       },
     };
   };
 
+  // -- Helpers
+  const generateToken = async (userId: number) => {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error("JWT_SECRET is not defined");
+
+    return jwt.sign({ id: userId }, secret, {
+      expiresIn: process.env.JWT_EXPIRES_IN ?? "7d",
+    } as jwt.SignOptions);
+  };
+  const comparePassword = async (password: string, hashedPassword: string) => {
+    return await bcrypt.compare(password, hashedPassword);
+  };
+
+  // -- Exports
   return {
     registerService,
     loginService,
   };
 }
-
-// ─── Helpers ──────────────────────────────────────────
-const generateToken = (userId: number): string => {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) throw new Error("JWT_SECRET is not defined");
-
-  return jwt.sign({ id: userId }, secret, {
-    expiresIn: process.env.JWT_EXPIRES_IN ?? "7d",
-  } as jwt.SignOptions);
-};

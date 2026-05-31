@@ -4,9 +4,9 @@ import { authMiddleware } from "../../middlewares/auth.middleware.js";
 import { themeController } from "./theme.controller.js";
 
 const themeRouter = Router();
-const { getTheme, updateTheme } = themeController();
+const { findTheme, updateTheme } = themeController();
 
-themeRouter.get("/", authMiddleware, getTheme);
+themeRouter.get("/", authMiddleware, findTheme);
 themeRouter.patch("/", authMiddleware, updateTheme);
 
 export default themeRouter;

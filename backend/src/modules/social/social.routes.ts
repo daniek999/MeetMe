@@ -4,9 +4,9 @@ import { authMiddleware } from "../../middlewares/auth.middleware.js";
 import { socialController } from "./social.controller.js";
 
 const socialRouter = Router();
-const { getSocial, updateSocial } = socialController();
+const { findSocial, updateSocial } = socialController();
 
-socialRouter.get("/", authMiddleware, getSocial);
+socialRouter.get("/", authMiddleware, findSocial);
 socialRouter.patch("/", authMiddleware, updateSocial);
 
 export default socialRouter;

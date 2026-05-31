@@ -2,32 +2,41 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../../prisma/lib/prisma";
 import { UserRole } from "../../prisma/generated/prisma/enums";
+import { userRepository } from "../modules/user/user.repository";
 
-export const roleMiddleware = (...roles: UserRole[]) => {
+export const roleMiddleware = (roles: UserRole[]) => {
+  const { readById } = userRepository();
+
   return async (req: Request, res: Response, next: NextFunction) => {
     if (!req.userId) {
-      res.status(401).json({ message: "Unauthorized" });
-      return;
+      return res.status(401).json({
+        status: false,
+        message: "No Autorizado.",
+        data: null,
+      });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: req.userId },
-      select: { role: true, status: true },
-    });
-
+    const user = await readById(req.userId);
     if (!user) {
-      res.status(401).json({ message: "User not found" });
-      return;
+      return res.status(401).json({
+        status: false,
+        message: "Usuario no econtrado.",
+        data: null,
+      });
     }
-
     if (user.status !== "enabled") {
-      res.status(403).json({ message: `Account is ${user.status}` });
-      return;
+      return res.status(403).json({
+        status: false,
+        message: "La cuenta no esta habilitada.",
+        data: null,
+      });
     }
-
     if (!roles.includes(user.role)) {
-      res.status(403).json({ message: "Insufficient permissions" });
-      return;
+      return res.status(403).json({
+        status: false,
+        message: "Rol inválido.",
+        data: null,
+      });
     }
 
     next();

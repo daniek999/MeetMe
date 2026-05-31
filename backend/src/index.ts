@@ -9,26 +9,25 @@ import themeRouter from "./modules/theme/theme.routes.js";
 import statisticRoute from "./modules/statistic/statistic.routes.js";
 
 const app = express();
-const PORT = process.env.PORT ?? 3002;
+const PORT = process.env.PORT!;
 dotenv.config({ quiet: true });
 
-// ─── Middlewares globales ─────────────────────────────
+// -- Global Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ─── Rutas ────────────────────────────────────────────
+// -- Routes
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/social", socialRouter);
 app.use("/api/theme", themeRouter);
 app.use("/api/statistic", statisticRoute);
 
-// ─── Health check ─────────────────────────────────────
+// -- Checkers
 app.get("/", (_req, res) => {
   res.json({ status: "ok", message: "Server running" });
 });
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
