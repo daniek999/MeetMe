@@ -1,0 +1,157 @@
+/* --- @custom --- */
+:root {
+  --typography-core: "Fredoka", sans-serif;
+
+  --fore-neutral: #000000;
+  --fore-partial: #a0a0a0;
+  --fore-primary: #33A1FD;
+  --fore-primary-fussy: #2176FF;
+  --fore-secondary: #77f8eb;
+  --fore-secondary-fussy: #02edd6;
+  --fore-danger: #fd7071;
+  --fore-danger-fussy: #c21414;
+
+  --back-depth: #fdffff;
+  --back-surface: #f7f7f7;
+}
+
+/* init */
+* {
+  font-family: var(--typography-core);
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+body {
+  background: var(--back-depth);
+  color: var(--fore-neutral);
+}
+
+/* background */
+.bg-depth {
+  background: var(--back-depth);
+}
+
+.bg-surface {
+  background: var(--back-surface);
+}
+
+.bg-primary-fussy {
+  background: var(--back-primary-subtle);
+}
+
+/* foreground */
+.fg-neutral {
+  color: var(--fore-neutral);
+}
+
+.fg-partial {
+  color: var(--fore-partial);
+}
+
+.fg-primary {
+  color: var(--fore-primary);
+}
+
+.fg-secondary {
+  color: var(--fore-secondary);
+}
+
+.fg-surface {
+  color: var(--back-surface);
+}
+
+.fg-gradient {
+  background: #f8f9fa;
+  background: -webkit-linear-gradient(to right, var(--fore-primary), var(--fore-secondary), var(--fore-primary));
+  background: linear-gradient(135deg, var(--fore-primary), var(--fore-secondary), var(--fore-primary));
+  background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+  animation: fg-gradiant 2000ms linear infinite;
+}
+
+/* border */
+.bdr-surface {
+  border: 1px solid var(--back-surface);
+}
+
+/* link */
+.lk {
+  outline: none;
+  width: fit-content;
+  text-decoration: none;
+  transition: 250ms ease-in-out;
+  color: var(--default-color);
+  cursor: pointer;
+}
+
+.lk-neutral {
+  --default-color: var(--fore-neutral);
+  --hover-color: var(--fore-neutral-subtle);
+  --active-color: var(--fore-primary);
+}
+
+.lk-partial {
+  --default-color: var(--fore-partial);
+  --hover-color: var(--fore-neutral);
+  --active-color: var(--fore-partial);
+}
+
+.lk-primary {
+  --default-color: var(--fore-primary);
+  --hover-color: var(--fore-primary-fussy);
+  --active-color: var(--fore-neutral);
+}
+
+.lk-danger {
+  --default-color: var(--fore-danger);
+  --hover-color: var(--fore-danger-fussy);
+  --active-color: var(--fore-neutral);
+}
+
+.lk-neutral:hover,
+.lk-partial:hover,
+.lk-primary:hover,
+.lk-danger:hover {
+  color: var(--hover-color);
+}
+
+.active {
+  color: var(--active-color);
+}
+
+/* rules */
+.hr-surface {
+  border: 0;
+  border-top: 2px solid var(--back-surface);
+  opacity: 100;
+}
+
+/* --- @keyframes --- */
+@keyframes fg-gradiant {
+  0% {
+    background-position: 200% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes bg-app {
+  0% {
+    background-size: 100% 100%;
+  }
+
+  100% {
+    background-size: 150% 150%;
+  }
+}
+
+/* --- @media --- */
+/* desktop */
+@media (max-width: 1080px) {}
+
+/* mobile */
+@media (max-width: 768px) {}
