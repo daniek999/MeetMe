@@ -1,4 +1,5 @@
 // src/modules/dashboard/components/ProfileEditor.tsx
+/* eslint-disable react-hooks/exhaustive-deps */
 import { apiProfileService } from "../services/profile.service";
 import { useState, useEffect, useRef } from "react";
 import Quill from "quill";
@@ -79,74 +80,76 @@ export default function ProfileEditor() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="d-flex flex-column gap-3 rounded">
-      {/*@displayname*/}
+    <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+      {/* @displayname */}
       <div className="d-flex flex-column gap-1">
-        <label className="form-label small mb-0">Nombre Público</label>
+        <div className="d-flex flex-row justify-content-between">
+          <label className="form-label small mb-0">Nombre Público</label>
+          <small className="fg-partial">{form.displayName.length}/100</small>
+        </div>
         <input
           type="text"
           name="displayName"
-          className="form-control border-0 rounded bg-depth"
+          className="ipt form-control-plaintext px-3 py-1 rounded"
+          maxLength={100}
           value={form.displayName}
           onChange={handleChange}
         />
       </div>
-      {/*@bio*/}
+      {/* @bio */}
       <div className="d-flex flex-column gap-1">
         <div className="d-flex flex-row justify-content-between">
           <label className="form-label small mb-0">Bio</label>
-          <small className="text-muted">{form.bio.length}/255</small>
+          <small className="fg-partial">{form.bio.length}/255</small>
         </div>
         <textarea
           name="bio"
-          className="form-control border-0 rounded bg-depth"
+          className="ipt form-control-plaintext px-3 py-1 rounded"
           rows={3}
           maxLength={255}
           value={form.bio}
           onChange={handleChange}
         />
       </div>
-      {/*@avatarURL*/}
+      {/* @avatarURL */}
       <div className="d-flex flex-column gap-1">
         <label className="form-label small mb-0">Avatar URL</label>
         <input
           type="url"
           name="avatarUrl"
-          className="form-control border-0 rounded bg-depth"
+          className="ipt form-control-plaintext px-3 py-1 rounded"
           value={form.avatarUrl}
           onChange={handleChange}
         />
       </div>
-      {/*@bannerURL*/}
+      {/* @bannerURL */}
       <div className="d-flex flex-column gap-1">
         <label className="form-label small mb-0">Banner URL</label>
         <input
           type="url"
           name="bannerUrl"
-          className="form-control border-0 rounded bg-depth"
+          className="ipt form-control-plaintext px-3 py-1 rounded"
           value={form.bannerUrl}
           onChange={handleChange}
         />
       </div>
-      {/*@content*/}
-      <div className="d-flex flex-column gap-1">
-        <label className="form-label small mb-0">Content</label>
-        <div
-          className="rounded bg-depth"
-          ref={quillRef}
-          style={{ minHeight: 100, border: 0 }}
-        />
+      {/* @content */}
+      <div className="d-flex flex-column gap-0">
+        <label className="form-label small mb-1">Content</label>
+        <div ref={quillRef} style={{ minHeight: 100 }} />
       </div>
+      <hr className="hr-surface my-0" />
+      {/* #error, !submit */}
       <div className="d-flex flex-row flex-wrap align-items-center gap-3">
-        {error && <div className="alert alert-danger">{error}</div>}
+        {error && (
+          <p className="fg-error mb-0">Error al guardar los cambios. {error}</p>
+        )}
         {success && (
-          <div className="text-success rounded py-0 mb-0">
-            Perfil Actualizado.
-          </div>
+          <p className="fg-success mb-0">Cambios guardados correctamente.</p>
         )}
         <button
           type="submit"
-          className="btn btn-primary ms-auto"
+          className="sw sw-primary px-3 py-1 rounded ms-auto"
           disabled={loading}
         >
           {loading ? (

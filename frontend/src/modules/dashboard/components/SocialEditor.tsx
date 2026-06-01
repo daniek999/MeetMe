@@ -80,39 +80,40 @@ export default function SocialEditor() {
 
   return (
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
-      {error && <div className="alert alert-danger">{error}</div>}
-      {success && (
-        <div className="alert alert-success rounded py-2 mb-0">
-          Social actualizado.
+      {/* @youtubeUrl, @twitterUrl, @patreonUrl, @discordUrl, @instagramUrl, @twitchUrl, @linkedinUrl, @websiteUrl */}
+      {SOCIAL_FIELDS.map(({ name, label }) => (
+        <div className="d-flex flex-column gap-1" key={name}>
+          <label className="form-label small mb-0">{label}</label>
+          <input
+            type="url"
+            name={name}
+            className="ipt form-control-plaintext px-3 py-1 rounded"
+            placeholder={`https://...`}
+            value={form[name]}
+            onChange={handleChange}
+          />
         </div>
-      )}
-
-      <div className="row g-3">
-        {SOCIAL_FIELDS.map(({ name, label }) => (
-          <div className="col-md-6 d-flex flex-column gap-1" key={name}>
-            <label className="form-label small mb-0">{label}</label>
-            <input
-              type="url"
-              name={name}
-              className="form-control bg-light border-0 rounded"
-              placeholder={`https://...`}
-              value={form[name]}
-              onChange={handleChange}
-            />
-          </div>
-        ))}
+      ))}
+      <hr className="hr-surface my-0" />
+      {/* #error, !submit */}
+      <div className="d-flex flex-row flex-wrap align-items-center gap-3">
+        {error && (
+          <p className="fg-error mb-0">Error al guardar los cambios. {error}</p>
+        )}
+        {success && (
+          <p className="fg-success mb-0">Cambios guardados correctamente.</p>
+        )}
+        <button
+          type="submit"
+          className="sw sw-primary px-3 py-1 rounded ms-auto"
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="spinner-border spinner-border-sm me-2" />
+          ) : null}
+          {loading ? "Guardando..." : "Guardar"}
+        </button>
       </div>
-
-      <button
-        type="submit"
-        className="btn btn-primary btn-sm"
-        disabled={loading}
-      >
-        {loading ? (
-          <span className="spinner-border spinner-border-sm me-2" />
-        ) : null}
-        {loading ? "Guardando..." : "Guardar"}
-      </button>
     </form>
   );
 }

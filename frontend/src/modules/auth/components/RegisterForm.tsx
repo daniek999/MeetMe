@@ -48,12 +48,11 @@ export default function RegisterForm() {
       )}
       {/* @username */}
       <div className="d-flex flex-column gap-1">
-        <label className="form-label mb-0 small">Usuario</label>
         <input
           type="text"
           name="username"
-          className="form-control bg-light border-0 rounded"
-          placeholder="anon123"
+          className="ipt form-control-plaintext px-3 py-1 rounded"
+          placeholder="Usuario"
           value={form.username}
           onChange={handleChange}
           required
@@ -61,12 +60,11 @@ export default function RegisterForm() {
       </div>
       {/* @email */}
       <div className="d-flex flex-column gap-1">
-        <label className="form-label mb-0 small">Correo</label>
         <input
           type="email"
           name="email"
-          className="form-control bg-light border-0 rounded"
-          placeholder="usuario@gmail.com"
+          className="ipt form-control-plaintext px-3 py-1 rounded"
+          placeholder="Correo"
           value={form.email}
           onChange={handleChange}
           required
@@ -74,12 +72,11 @@ export default function RegisterForm() {
       </div>
       {/* @password */}
       <div className="d-flex flex-column gap-1">
-        <label className="form-label mb-0 small">Clave</label>
         <input
           type="password"
           name="password"
-          className="form-control bg-light border-0 rounded"
-          placeholder="claveultrasupersecreta"
+          className="ipt form-control-plaintext px-3 py-1 rounded"
+          placeholder="Clave"
           value={form.password}
           onChange={handleChange}
           required
@@ -88,7 +85,7 @@ export default function RegisterForm() {
       {/* !submit */}
       <button
         type="submit"
-        className="btn btn-primary w-100 mt-3"
+        className="sw sw-primary px-3 py-1 w-100 rounded"
         disabled={loading}
       >
         {loading ? (

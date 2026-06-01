@@ -58,69 +58,75 @@ const ThemeEditor = () => {
 
   return (
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
-      {error && <div className="alert alert-danger">{error}</div>}
-      {success && (
-        <div className="alert alert-success rounded py-2 mb-0">
-          Tema actualizado.
+      {/* @primaryColor */}
+      <div className="d-flex flex-column gap-1">
+        <div className="d-flex flex-row justify-content-between">
+          <label className="form-label small mb-0">Texto Primario</label>
+          <small className="fg-partial">{form.primaryColor}</small>
         </div>
-      )}
-
-      <div className="row g-3">
-        {/* Primary Color */}
-        <div className="col-md-6 d-flex flex-column gap-1">
-          <label className="form-label small mb-0">Primary Color</label>
-          <div className="d-flex align-items-center gap-2">
-            <input
-              type="color"
-              name="primaryColor"
-              className="form-control form-control-color p-0 border-0 rounded-circle"
-              style={{ width: 32, height: 32 }}
-              value={form.primaryColor}
-              onChange={handleChange}
-            />
-            <span className="text-muted">{form.primaryColor}</span>
-          </div>
-        </div>
-        {/* Background Color */}
-        <div className="col-md-6 d-flex flex-column gap-1">
-          <label className="form-label small mb-0">Background Color</label>
-          <div className="d-flex align-items-center gap-2">
-            <input
-              type="color"
-              name="backgroundColor"
-              className="form-control form-control-color p-0 border-0 rounded-circle"
-              style={{ width: 32, height: 32 }}
-              value={form.backgroundColor}
-              onChange={handleChange}
-            />
-            <span className="text-muted">{form.backgroundColor}</span>
-          </div>
-        </div>
-        {/* Preview */}
-        <div className="col-md-12 d-flex flex-column gap-1">
-          <label className="form-label small mb-0">Previsualización</label>
-          <p
-            className="p-2 rounded text-center mb-0 fs-6"
-            style={{
-              backgroundColor: form.backgroundColor,
-              color: form.primaryColor,
-            }}
-          >
-            Asi es como se combinaran los colores en tu perfil.
-          </p>
+        <div className="d-flex align-items-center gap-2">
+          <input
+            type="color"
+            name="primaryColor"
+            className="ipt form-control-plaintext p-0 rounded"
+            value={form.primaryColor}
+            onChange={handleChange}
+          />
         </div>
       </div>
-
-      <button
-        type="submit"
-        className="btn btn-primary btn-sm"
-        disabled={loading}
-      >
-        {loading ? (
-          <span className="spinner-border spinner-border-sm me-2" />
-        ) : null}
-        {loading ? "Guardando..." : "Guardar"}
-      </button>
+      {/* @backgroundColor */}
+      <div className="d-flex flex-column gap-1">
+        <div className="d-flex flex-row justify-content-between">
+          <label className="form-label small mb-0">Fondo Primario</label>
+          <small className="fg-partial">{form.backgroundColor}</small>
+        </div>
+        <div className="d-flex align-items-center gap-2">
+          <input
+            type="color"
+            name="backgroundColor"
+            className="ipt form-control-plaintext p-0 rounded"
+            value={form.backgroundColor}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+      {/* -Preview */}
+      <div className="d-flex flex-column gap-1">
+        <label className="form-label small mb-0">Previsualización</label>
+        <div
+          className="d-flex flex-column align-items-center gap-2 rounded p-4"
+          style={{
+            backgroundColor: form.backgroundColor,
+            color: form.primaryColor,
+          }}
+        >
+          <h4 className="mb-0">Titulo</h4>
+          <p className="mb-0">
+            Asi es como se combinaran los colores en tu perfil.
+          </p>
+          <small className="mb-0">Que te parece?</small>
+        </div>
+      </div>
+      <hr className="hr-surface my-0" />
+      {/* #error, !submit */}
+      <div className="d-flex flex-row flex-wrap align-items-center gap-3">
+        {error && (
+          <p className="fg-error mb-0">Error al guardar los cambios. {error}</p>
+        )}
+        {success && (
+          <p className="fg-success mb-0">Cambios guardados correctamente.</p>
+        )}
+        <button
+          type="submit"
+          className="sw sw-primary px-3 py-1 rounded ms-auto"
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="spinner-border spinner-border-sm me-2" />
+          ) : null}
+          {loading ? "Guardando..." : "Guardar"}
+        </button>
+      </div>
     </form>
   );
 };
