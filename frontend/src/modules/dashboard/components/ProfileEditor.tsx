@@ -29,7 +29,8 @@ export default function ProfileEditor() {
         placeholder: "Escribe algo sobre ti...",
         modules: {
           toolbar: [
-            [{ size: ["small", false, "large", "huge"] }],
+            [{ size: ["small", false] }],
+            [{ header: [1, 2, 3, false] }],
             ["bold", "italic", "underline"],
             [{ list: "bullet" }],
             ["link"],
@@ -141,12 +142,8 @@ export default function ProfileEditor() {
       <hr className="hr-surface my-0" />
       {/* #error, !submit */}
       <div className="d-flex flex-row flex-wrap align-items-center gap-3">
-        {error && (
-          <p className="fg-error mb-0">Error al guardar los cambios. {error}</p>
-        )}
-        {success && (
-          <p className="fg-success mb-0">Cambios guardados correctamente.</p>
-        )}
+        {error && <p className="fg-error mb-0">Error. {error}</p>}
+        {success && <p className="fg-success mb-0">Cambios guardados.</p>}
         <button
           type="submit"
           className="sw sw-primary px-3 py-1 rounded ms-auto"

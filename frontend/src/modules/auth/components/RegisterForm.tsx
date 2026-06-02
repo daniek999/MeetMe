@@ -40,24 +40,6 @@ export default function RegisterForm() {
   // Renders
   return (
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
-      {/* #error.message */}
-      {error && (
-        <div className="alert alert-danger px-3 py-0 text-center border-0">
-          {error}
-        </div>
-      )}
-      {/* @username */}
-      <div className="d-flex flex-column gap-1">
-        <input
-          type="text"
-          name="username"
-          className="ipt form-control-plaintext px-3 py-1 rounded"
-          placeholder="Usuario"
-          value={form.username}
-          onChange={handleChange}
-          required
-        />
-      </div>
       {/* @email */}
       <div className="d-flex flex-column gap-1">
         <input
@@ -82,6 +64,18 @@ export default function RegisterForm() {
           required
         />
       </div>
+      {/* @username */}
+      <div className="d-flex flex-column gap-1">
+        <input
+          type="text"
+          name="username"
+          className="ipt form-control-plaintext px-3 py-1 rounded"
+          placeholder="Usuario"
+          value={form.username}
+          onChange={handleChange}
+          required
+        />
+      </div>
       {/* !submit */}
       <button
         type="submit"
@@ -93,6 +87,8 @@ export default function RegisterForm() {
         ) : null}
         {loading ? "Creando cuenta..." : <span>Registrarse</span>}
       </button>
+      {/* #error.message */}
+      {error && <small className="fg-error text-center">{error}</small>}
     </form>
   );
 }

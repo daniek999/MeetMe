@@ -110,12 +110,8 @@ const ThemeEditor = () => {
       <hr className="hr-surface my-0" />
       {/* #error, !submit */}
       <div className="d-flex flex-row flex-wrap align-items-center gap-3">
-        {error && (
-          <p className="fg-error mb-0">Error al guardar los cambios. {error}</p>
-        )}
-        {success && (
-          <p className="fg-success mb-0">Cambios guardados correctamente.</p>
-        )}
+        {error && <p className="fg-error mb-0">Error. {error}</p>}
+        {success && <p className="fg-success mb-0">Cambios guardados.</p>}
         <button
           type="submit"
           className="sw sw-primary px-3 py-1 rounded ms-auto"

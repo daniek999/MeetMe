@@ -12,7 +12,7 @@ import {
   toggleLikeService,
 } from "../services/profile.services.js";
 
-const PublicProfilePage = () => {
+export default function PublicProfilePage() {
   // Hooks
   const navigate = useNavigate();
   const { username } = useParams<{ username: string }>();
@@ -123,6 +123,4 @@ const PublicProfilePage = () => {
       onShare={handleShare}
     />
   );
-};
-
-export default PublicProfilePage;
+}

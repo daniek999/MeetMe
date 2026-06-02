@@ -39,12 +39,6 @@ export default function LoginForm() {
   // Renders
   return (
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
-      {/* #error.message */}
-      {error && (
-        <div className="alert alert-danger p-0 text-center border-0 mb-0">
-          {error}
-        </div>
-      )}
       {/* @email */}
       <div className="d-flex flex-column gap-1">
         <input
@@ -80,6 +74,8 @@ export default function LoginForm() {
         ) : null}
         {loading ? "Ingresando..." : "Ingresar"}
       </button>
+      {/* #error.message */}
+      {error && <small className="fg-error text-center">{error}</small>}
     </form>
   );
 }
