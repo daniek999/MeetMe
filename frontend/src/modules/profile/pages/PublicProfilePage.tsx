@@ -113,14 +113,16 @@ export default function PublicProfilePage() {
     );
   }
   return (
-    <ProfileCard
-      profile={profile}
-      interaction={interaction}
-      isOwn={isOwn}
-      isAuthenticated={isAuthenticated}
-      onLike={handleLike}
-      onFollow={handleFollow}
-      onShare={handleShare}
-    />
+    <section className="container d-flex flex-column gap-3 py-5 flex-grow-1">
+      <ProfileCard
+        profile={profile}
+        interaction={interaction}
+        isOwn={isOwn}
+        isAuthenticated={isAuthenticated}
+        onLike={handleLike}
+        onFollow={handleFollow}
+        onShare={handleShare}
+      />
+    </section>
   );
 }

@@ -7,6 +7,7 @@ import DashboardPage from "../modules/dashboard/pages/DashboardPage.js";
 import PublicProfilePage from "../modules/profile/pages/PublicProfilePage.js";
 import AuthLayout from "../layouts/AuthLayout.js";
 import DashboardLayout from "../layouts/DashboardLayout.js";
+import ProfileLayout from "../layouts/ProfileLayout.js";
 
 const AppRouter = () => {
   return (
@@ -18,7 +19,9 @@ const AppRouter = () => {
       </Route>
 
       {/* ProfileLayout - Public */}
-      <Route path="/meet/:username" element={<PublicProfilePage />} />
+      <Route element={<ProfileLayout />}>
+        <Route path="/meet/:username" element={<PublicProfilePage />} />
+      </Route>
 
       {/* DashboardLayout - Private */}
       <Route element={<DashboardLayout />}>

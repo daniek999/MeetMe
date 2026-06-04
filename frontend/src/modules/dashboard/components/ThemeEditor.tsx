@@ -60,9 +60,11 @@ const ThemeEditor = () => {
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
       {/* @primaryColor */}
       <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-row justify-content-between">
+        <div className="d-flex flex-column">
           <label className="form-label small mb-0">Texto Primario</label>
-          <small className="fg-partial">{form.primaryColor}</small>
+          <small className="fg-partial">
+            El color que tomara tu texto principal.
+          </small>
         </div>
         <div className="d-flex align-items-center gap-2">
           <input
@@ -73,12 +75,18 @@ const ThemeEditor = () => {
             onChange={handleChange}
           />
         </div>
+        <small className="fg-partial text-end">
+          {form.primaryColor.toUpperCase()}
+        </small>
       </div>
+
       {/* @backgroundColor */}
       <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-row justify-content-between">
+        <div className="d-flex flex-column">
           <label className="form-label small mb-0">Fondo Primario</label>
-          <small className="fg-partial">{form.backgroundColor}</small>
+          <small className="fg-partial">
+            El color que tomara tu fondo principal.
+          </small>
         </div>
         <div className="d-flex align-items-center gap-2">
           <input
@@ -89,25 +97,35 @@ const ThemeEditor = () => {
             onChange={handleChange}
           />
         </div>
+        <small className="fg-partial text-end">
+          {form.backgroundColor.toUpperCase()}
+        </small>
       </div>
+
       {/* -Preview */}
       <div className="d-flex flex-column gap-1">
-        <label className="form-label small mb-0">Previsualización</label>
+        <div className="d-flex flex-column">
+          <label className="form-label small mb-0">Preview</label>
+          <small className="fg-partial">
+            Una ojeada a como quedaria tus colores en tu perfil.
+          </small>
+        </div>
         <div
-          className="d-flex flex-column align-items-center gap-2 rounded p-4"
+          className="d-flex flex-column align-items-center gap-2 rounded p-4 bdr-surface"
           style={{
             backgroundColor: form.backgroundColor,
             color: form.primaryColor,
           }}
         >
-          <h4 className="mb-0">Titulo</h4>
-          <p className="mb-0">
-            Asi es como se combinaran los colores en tu perfil.
+          <h4 className="mb-0">Texto Primario sobre Fondo Primario</h4>
+          <p className="mb-0 p-3 bg-surface py-1">
+            Texto Secundario con Fondo Secundario
           </p>
-          <small className="mb-0">Que te parece?</small>
         </div>
+        <small className="fg-partial text-end">¿Que te parece?</small>
       </div>
       <hr className="hr-surface my-0" />
+
       {/* #error, !submit */}
       <div className="d-flex flex-row flex-wrap align-items-center gap-3">
         {error && <p className="fg-error mb-0">Error. {error}</p>}

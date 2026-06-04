@@ -63,14 +63,12 @@ input:-webkit-autofill:active {
 }
 
 .header-container {
-  border-bottom: 1px solid var(--back-surface);
   background-color: transparent;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
 .footer-container {
-  border-top: 1px solid var(--back-surface);
   background-color: transparent;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);

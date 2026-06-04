@@ -11,11 +11,11 @@ export default function AuthLayout() {
         <div />
       </div>
       <div className="position-relative min-vh-100 z-1 d-flex align-items-center justify-content-center">
-        <h5 className="position-absolute top-0 start-0 p-3 mb-0">
+        <h2 className="position-absolute top-0 start-0 p-3 mb-0 w-100">
           <i className="ri-user-smile-fill"></i> MeetMe
-        </h5>
+        </h2>
         <Outlet />
-        <small className="position-absolute bottom-0 end-0 p-3">
+        <small className="position-absolute bottom-0 end-0 p-3 w-100">
           © MeetMe 2026
         </small>
       </div>
