@@ -1,24 +1,11 @@
 // src/modules/dashboard/components/SocialEditor.tsx
+import { apiSocialService } from "../services/social.service";
 import { useState, useEffect } from "react";
-import {
-  getSocialService,
-  updateSocialService,
-} from "../services/social.service.js";
-
-const SOCIAL_FIELDS = [
-  { name: "youtubeUrl", label: "YouTube" },
-  { name: "twitterUrl", label: "Twitter/X" },
-  { name: "patreonUrl", label: "Patreon" },
-  { name: "discordUrl", label: "Discord" },
-  { name: "instagramUrl", label: "Instagram" },
-  { name: "twitchUrl", label: "Twitch" },
-  { name: "linkedinUrl", label: "LinkedIn" },
-  { name: "websiteUrl", label: "Website" },
-] as const;
-type SocialForm = Record<(typeof SOCIAL_FIELDS)[number]["name"], string>;
+import { FormButton, FormInput } from "./ProfileEditor";
 
 export default function SocialEditor() {
   // Hooks
+  const { getSocialService, updateSocialService } = apiSocialService();
   const [form, setForm] = useState<SocialForm>({
     youtubeUrl: "",
     twitterUrl: "",
@@ -53,8 +40,13 @@ export default function SocialEditor() {
       }
     };
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -78,38 +70,40 @@ export default function SocialEditor() {
     }
   };
 
+  // Renders
   return (
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
       {/* @youtubeUrl, @twitterUrl, @patreonUrl, @discordUrl, @instagramUrl, @twitchUrl, @linkedinUrl, @websiteUrl */}
       {SOCIAL_FIELDS.map(({ name, label }) => (
-        <div className="d-flex flex-column gap-1" key={name}>
-          <label className="form-label small mb-0">{label}</label>
-          <input
-            type="url"
-            name={name}
-            className="ipt form-control-plaintext px-3 py-1 rounded"
-            placeholder={`https://...`}
-            value={form[name]}
-            onChange={handleChange}
-          />
-        </div>
+        <FormInput
+          label={label}
+          caption=""
+          constraint=""
+          name={name}
+          type="url"
+          value={form[name]}
+          onChange={handleChange}
+          key={name}
+        />
       ))}
-      <hr className="hr-surface my-0" />
       {/* #error, !submit */}
       <div className="d-flex flex-row flex-wrap align-items-center gap-3">
         {error && <p className="fg-error mb-0">Error. {error}</p>}
         {success && <p className="fg-success mb-0">Cambios guardados.</p>}
-        <button
-          type="submit"
-          className="sw sw-primary px-3 py-1 rounded ms-auto"
-          disabled={loading}
-        >
-          {loading ? (
-            <span className="spinner-border spinner-border-sm me-2" />
-          ) : null}
-          {loading ? "Guardando..." : "Guardar"}
-        </button>
+        <FormButton label="Guardar" loading={loading} type="submit" />
       </div>
     </form>
   );
 }
+
+const SOCIAL_FIELDS = [
+  { name: "youtubeUrl", label: "YouTube" },
+  { name: "twitterUrl", label: "Twitter/X" },
+  { name: "patreonUrl", label: "Patreon" },
+  { name: "discordUrl", label: "Discord" },
+  { name: "instagramUrl", label: "Instagram" },
+  { name: "twitchUrl", label: "Twitch" },
+  { name: "linkedinUrl", label: "LinkedIn" },
+  { name: "websiteUrl", label: "Website" },
+] as const;
+type SocialForm = Record<(typeof SOCIAL_FIELDS)[number]["name"], string>;

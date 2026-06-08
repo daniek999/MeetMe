@@ -26,7 +26,10 @@ export default function ProfileCard({
   return (
     <main
       className="container d-flex flex-column justify-content-center gap-4 flex-grow-1"
-      style={{ maxWidth: 720 }}
+      style={{
+        maxWidth: 720,
+        fontFamily: profile.theme?.fontFamily,
+      }}
     >
       {/* Banner */}
       <div

@@ -58,23 +58,19 @@ export default function ProfileLayout() {
       style={{
         background: profile.theme?.backgroundColor,
         color: profile.theme?.primaryColor,
+        fontFamily: profile.theme?.fontFamily,
       }}
     >
-      <header
-        className="header-container position-sticky top-0 z-1 py-2"
-        style={{
-          borderBottom: `1px solid ${profile.theme?.backgroundColor}`,
-        }}
-      >
+      <header className="header-container position-sticky top-0 z-1 py-2">
         <div className="container d-flex flex-row align-items-center gap-3">
-          <h2 className="mb-0 fg-neutral me-auto">
+          <h2 className="mb-0 fg-neutral mx-auto">
             <span
               style={{
                 color: ` ${profile.theme?.primaryColor}`,
               }}
             >
               Meet
-            </span>
+            </span>{" "}
             <span className="fg-gradient">{profile.displayName}</span>
           </h2>
         </div>
@@ -82,17 +78,9 @@ export default function ProfileLayout() {
 
       <Outlet />
 
-      <footer
-        className="footer-container position-sticky bottom-0 z-1 py-2"
-        style={{
-          borderBottom: `1px solid ${profile.theme?.backgroundColor}`,
-        }}
-      >
+      <footer className="footer-container position-sticky bottom-0 z-1 py-2">
         <div className="container d-flex flex-row align-items-center gap-2">
-          <small className="mb-0 fg-partial">© MeetMe 2026</small>
-          <a className="lk lk-primary ms-auto small" href="#">
-            Changelog <i className="ri-hourglass-fill"></i>
-          </a>
+          <small className="mb-0 fg-partial mx-auto">© MeetMe 2026</small>
         </div>
       </footer>
     </section>

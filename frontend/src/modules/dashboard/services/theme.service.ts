@@ -9,14 +9,20 @@ interface UpdateThemeInput {
   layout?: string | null;
 }
 
-export const getThemeService = async (): Promise<Theme> => {
-  const { data } = await api.get<ApiResponse<Theme>>("/theme");
-  return data.data.item;
-};
+export function apiThemeService() {
+  const getThemeService = async (): Promise<Theme> => {
+    const { data } = await api.get<ApiResponse<Theme>>("/theme");
+    return data.data.item;
+  };
+  const updateThemeService = async (
+    input: UpdateThemeInput,
+  ): Promise<Theme> => {
+    const { data } = await api.patch<ApiResponse<Theme>>("/theme", input);
+    return data.data.item;
+  };
 
-export const updateThemeService = async (
-  input: UpdateThemeInput,
-): Promise<Theme> => {
-  const { data } = await api.patch<ApiResponse<Theme>>("/theme", input);
-  return data.data.item;
-};
+  return {
+    getThemeService,
+    updateThemeService,
+  };
+}

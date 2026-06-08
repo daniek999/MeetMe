@@ -1,5 +1,4 @@
 // src/modules/dashboard/components/ProfileEditor.tsx
-/* eslint-disable react-hooks/exhaustive-deps */
 import { apiProfileService } from "../services/profile.service";
 import { useState, useEffect } from "react";
 import "quill/dist/quill.snow.css";
@@ -35,9 +34,12 @@ export default function ProfileEditor() {
       }
     };
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -61,133 +63,184 @@ export default function ProfileEditor() {
   return (
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
       {/* @displayname */}
-      <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-column">
-          <label htmlFor="displayName" className="form-label mb-0">
-            Nombre Público
-          </label>
-          <small className="fg-partial small">
-            El nombre que aparecera en tu perfil
-          </small>
-        </div>
-        <input
-          type="text"
-          name="displayName"
-          className="ipt form-control-plaintext px-3 py-1 rounded"
-          maxLength={100}
-          value={form.displayName}
-          onChange={handleChange}
-        />
-        <small className="fg-partial text-end">
-          {form.displayName.length}/100
-        </small>
-      </div>
+      <FormInput
+        label="Nombre Público"
+        caption="El nombre que aparecerá en tu perfil."
+        constraint={`${form.displayName.length}/100`}
+        name="displayName"
+        type="text"
+        maxLength={100}
+        value={form.displayName}
+        onChange={handleChange}
+      />
 
       {/* @bio */}
-      <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-column">
-          <label htmlFor="bio" className="form-label mb-0">
-            Biografía
-          </label>
-          <small className="fg-partial small">
-            Escribe lo más resaltante de ti.
-          </small>
-        </div>
-        <textarea
-          name="bio"
-          className="ipt form-control-plaintext px-3 py-1 rounded"
-          rows={3}
-          maxLength={255}
-          value={form.bio}
-          onChange={handleChange}
-        />
-        <small className="fg-partial text-end">{form.bio.length}/255</small>
-      </div>
+      <FormInput
+        label="Biografía"
+        caption="Escribe lo más resaltante de ti."
+        constraint={`${form.bio.length}/255`}
+        name="bio"
+        type="textarea"
+        maxLength={255}
+        rows={3}
+        value={form.bio}
+        onChange={handleChange}
+      />
 
-      {/* @avatarURL */}
-      <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-column">
-          <label htmlFor="avatarUrl" className="form-label mb-0">
-            Avatar URL
-          </label>
-          <small className="fg-partial small">
-            Ingresa el enlace / link de tu referencia y esta se cargara.
-          </small>
-        </div>
-        <input
-          type="url"
-          name="avatarUrl"
-          className="ipt form-control-plaintext px-3 py-1 rounded"
-          value={form.avatarUrl}
-          onChange={handleChange}
-        />
-        <small className="fg-partial text-end">
-          .gif | .png | .jpg | .webp
-        </small>
-      </div>
+      {/* @avatarUrl */}
+      <FormInput
+        label="Avatar URL"
+        caption="Ingresa tu enlace de referencia."
+        constraint=".gif | .png | .jpg | .webp"
+        name="avatarUrl"
+        type="url"
+        value={form.avatarUrl}
+        onChange={handleChange}
+      />
 
-      {/* @bannerURL */}
-      <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-column">
-          <label htmlFor="bannerUrl" className="form-label mb-0">
-            Banner URL
-          </label>
-          <small className="fg-partial small">
-            Ingresa el enlace / link de tu referencia y esta se cargara.
-          </small>
-        </div>
-        <label className="form-label small mb-0"></label>
-        <input
-          type="url"
-          name="bannerUrl"
-          className="ipt form-control-plaintext px-3 py-1 rounded"
-          value={form.bannerUrl}
-          onChange={handleChange}
-        />
-        <small className="fg-partial text-end">
-          .gif | .png | .jpg | .webp
-        </small>
-      </div>
+      {/* @bannerUrl */}
+      <FormInput
+        label="Banner URL"
+        caption="Ingresa tu enlace de referencia."
+        constraint=".gif | .png | .jpg | .webp"
+        name="bannerUrl"
+        type="url"
+        value={form.bannerUrl}
+        onChange={handleChange}
+      />
 
       {/* @content */}
-      <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-column">
-          <label htmlFor="content" className="form-label mb-0">
-            Contenido
-          </label>
-          <small className="fg-partial small">
-            Escribe y cuentanos sobre ti. (Puedes usar Markdown o HTML)
-          </small>
-        </div>
-        <textarea
-          name="content"
-          className="ipt form-control-plaintext px-3 py-1 rounded"
-          rows={8}
-          maxLength={5000}
-          value={form.content}
-          onChange={handleChange}
-        />
-        <small className="fg-partial text-end">
-          {form.content.length}/5000
-        </small>
-      </div>
-      <hr className="hr-surface my-0" />
+      <FormInput
+        label="Contenido"
+        caption="Escribe y cuéntanos sobre ti (Markdown o HTML)."
+        constraint={`${form.content.length}/5000`}
+        name="content"
+        type="textarea"
+        maxLength={5000}
+        rows={8}
+        value={form.content}
+        onChange={handleChange}
+      />
 
       {/* #error, !submit */}
       <div className="d-flex flex-row flex-wrap align-items-center gap-3">
         {error && <p className="fg-error mb-0">Error. {error}</p>}
         {success && <p className="fg-success mb-0">Cambios guardados.</p>}
-        <button
-          type="submit"
-          className="sw sw-primary px-3 py-1 rounded ms-auto"
-          disabled={loading}
-        >
-          {loading ? (
-            <span className="spinner-border spinner-border-sm me-2" />
-          ) : null}
-          {loading ? "Guardando..." : "Guardar"}
-        </button>
+        <FormButton label="Guardar" loading={loading} type="submit" />
       </div>
     </form>
+  );
+}
+
+export function FormInput({
+  label,
+  caption,
+  constraint,
+  type,
+  name,
+  value,
+  onChange,
+  maxLength,
+  rows = 3,
+  itemArray,
+}: {
+  label: string;
+  caption: string;
+  constraint: string;
+  type: "text" | "url" | "textarea" | "color" | "select";
+  name: string;
+  value: string;
+  onChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => void;
+  maxLength?: number;
+  rows?: number;
+  itemArray?: string[];
+}) {
+  const isTextArea = type === "textarea";
+
+  return (
+    <div className="d-flex flex-column gap-1">
+      <div className="d-flex flex-column">
+        <label htmlFor={name} className="form-label small mb-0">
+          {label}
+        </label>
+        <div className="d-flex flex-row justify-content-between">
+          <small className="fg-partial">{caption}</small>
+          <small className="fg-partial">{constraint}</small>
+        </div>
+      </div>
+
+      {isTextArea ? (
+        <textarea
+          id={name}
+          name={name}
+          className="ipt form-control-plaintext px-3 py-1"
+          rows={rows}
+          maxLength={maxLength}
+          value={value}
+          onChange={onChange}
+        />
+      ) : type === "color" ? (
+        <input
+          id={name}
+          type={type}
+          name={name}
+          className="ipt form-control-plaintext p-0"
+          maxLength={maxLength}
+          value={value}
+          onChange={onChange}
+        />
+      ) : type === "select" ? (
+        <select
+          id={name}
+          name={name}
+          className="ipt form-control-plaintext px-3 py-1"
+          value={value}
+          onChange={onChange}
+        >
+          {itemArray!.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          id={name}
+          type={type}
+          name={name}
+          className="ipt form-control-plaintext px-3 py-1"
+          maxLength={maxLength}
+          value={value}
+          onChange={onChange}
+        />
+      )}
+    </div>
+  );
+}
+
+export function FormButton({
+  type,
+  loading,
+  label,
+}: {
+  type: "submit" | "reset" | "button";
+  loading: boolean;
+  label: string;
+}) {
+  return (
+    <button
+      type={type}
+      className="sw sw-primary px-3 py-1 ms-auto"
+      disabled={loading}
+    >
+      {loading ? (
+        <span className="spinner-border spinner-border-sm me-2" />
+      ) : null}
+      {loading ? "Guardando..." : label}
+    </button>
   );
 }

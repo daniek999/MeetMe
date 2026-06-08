@@ -5,7 +5,7 @@ import LoginForm from "../components/LoginForm.js";
 export default function LoginPage() {
   return (
     <div
-      className="bg-depth d-flex flex-column gap-4 p-4 rounded w-100 shadow-lg"
+      className="bg-depth d-flex flex-column gap-4 p-4 w-100 shadow-lg"
       style={{ maxWidth: 360 }}
     >
       <div className="d-flex flex-column">

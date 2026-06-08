@@ -18,7 +18,7 @@ export default function DashboardLayout() {
       <header className="header-container position-sticky top-0 z-1 py-2">
         <div className="container d-flex flex-row align-items-center gap-3">
           <h2 className="mb-0 fg-neutral me-auto">
-            Meet<span className="fg-gradient">Dashboard</span>
+            Meet<span className="fg-gradient">Me</span>
           </h2>
           <Link
             className="lk lk-primary"
@@ -37,12 +37,9 @@ export default function DashboardLayout() {
 
       <footer className="footer-container position-sticky bottom-0 z-1 py-2">
         <div className="container d-flex flex-row align-items-center gap-2">
-          <small className="mb-0 fg-partial">
-            © MeetMe 2026 — Dashboard de {user?.username}
+          <small className="mb-0 fg-partial text-center w-100">
+            <i className="ri-copyright-line"></i> MeetMe 2026
           </small>
-          <a className="lk lk-primary ms-auto small" href="#">
-            Changelog <i className="ri-hourglass-fill"></i>
-          </a>
         </div>
       </footer>
     </section>

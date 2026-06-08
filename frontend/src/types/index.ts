@@ -72,7 +72,7 @@ export interface Theme {
   primaryColor: string;
   backgroundColor: string;
   fontFamily: string;
-  layout: Layout;
+  layout: Layout; /** Eliminar */
   updatedAt?: string;
 }
 
@@ -97,6 +97,7 @@ export interface AuthData {
   item: AuthItem;
   token: string;
 }
+
 export interface AuthResponse {
   success: boolean;
   message: string;

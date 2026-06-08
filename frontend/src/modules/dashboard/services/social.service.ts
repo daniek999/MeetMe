@@ -13,14 +13,20 @@ interface UpdateSocialInput {
   websiteUrl?: string | null;
 }
 
-export const getSocialService = async (): Promise<Social> => {
-  const { data } = await api.get<ApiResponse<Social>>("/social");
-  return data.data.item;
-};
+export function apiSocialService() {
+  const getSocialService = async (): Promise<Social> => {
+    const { data } = await api.get<ApiResponse<Social>>("/social");
+    return data.data.item;
+  };
+  const updateSocialService = async (
+    input: UpdateSocialInput,
+  ): Promise<Social> => {
+    const { data } = await api.patch<ApiResponse<Social>>("/social", input);
+    return data.data.item;
+  };
 
-export const updateSocialService = async (
-  input: UpdateSocialInput,
-): Promise<Social> => {
-  const { data } = await api.patch<ApiResponse<Social>>("/social", input);
-  return data.data.item;
-};
+  return {
+    getSocialService,
+    updateSocialService,
+  };
+}

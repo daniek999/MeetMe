@@ -5,22 +5,21 @@
   /* Textos */
   --fore-neutral: #F6F3F9;
   --fore-partial: #9A95A6;
-  --fore-primary: #A56BFF;
-  --fore-primary-fussy: #6E35E8;
+  --fore-primary: #ab75fb;
+  --fore-primary-fussy: #7245d4;
   --fore-secondary: #42D6C4;
   --fore-secondary-fussy: #239C90;
   --fore-success: #52D273;
   --fore-error: #FF6B7A;
 
-  --back-depth: #131116;
-  --back-surface: #211E26;
+  --back-depth: #151517;
+  --back-surface: #2f2f2f;
 
   /* Estados */
 }
 
 /*#region - INIT */
 * {
-  font-family: var(--typography-core);
   box-sizing: border-box;
   scrollbar-width: none;
   margin: 0px;
@@ -28,6 +27,7 @@
 }
 
 body {
+  font-family: var(--typography-core);
   background-color: var(--back-depth);
   color: var(--fore-neutral);
   min-height: 100vh;
@@ -39,6 +39,10 @@ body {
 input[type="color"] {
   width: 100%;
   height: 34px;
+}
+
+select {
+  min-height: 34px;
 }
 
 textarea {
@@ -152,10 +156,13 @@ input:-webkit-autofill:active {
   cursor: pointer;
   outline: none;
   width: fit-content;
-  text-decoration: underline solid transparent 1px;
-  text-underline-offset: 0.25em;
+  text-decoration: none;
   color: var(--lk-fore-color-default);
   transition: color 300ms ease-in-out, text-decoration 300ms ease-in-out;
+  /*
+  text-decoration: underline solid transparent 1px;
+  text-underline-offset: 0.25em;
+  */
 }
 
 .lk-primary {
@@ -175,7 +182,6 @@ input:-webkit-autofill:active {
 .lk-primary:hover,
 .lk-secondary:hover {
   color: var(--lk-fore-color-hover);
-  text-decoration: underline solid var(--lk-fore-color-hover) 1px;
 }
 
 .lk-primary:focus-within,
@@ -184,6 +190,7 @@ input:-webkit-autofill:active {
 }
 
 .lk-active {
+  --lk-fore-color-hover: var(--lk-fore-color-active);
   color: var(--lk-fore-color-active);
 }
 
@@ -282,5 +289,3 @@ input:-webkit-autofill:active {
     background-position: 0% 50%;
   }
 }
-
-/* --- @media --- */

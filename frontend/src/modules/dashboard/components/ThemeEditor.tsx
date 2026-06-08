@@ -1,16 +1,16 @@
 // src/modules/dashboard/components/ThemeEditor.tsx
+import { apiThemeService } from "../services/theme.service";
 import { useState, useEffect } from "react";
-import {
-  getThemeService,
-  updateThemeService,
-} from "../services/theme.service.js";
+import React from "react";
+import { FormButton, FormInput } from "./ProfileEditor";
 
-const ThemeEditor = () => {
+export default function ThemeEditor() {
   // Hooks
+  const { getThemeService, updateThemeService } = apiThemeService();
   const [form, setForm] = useState({
     primaryColor: "#000000",
     backgroundColor: "#ffffff",
-    fontFamily: "Inter",
+    fontFamily: "Fredoka",
     layout: "classic",
   });
   const [loading, setLoading] = useState(false);
@@ -33,9 +33,12 @@ const ThemeEditor = () => {
       }
     };
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -56,65 +59,59 @@ const ThemeEditor = () => {
     }
   };
 
+  // Renders
   return (
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
       {/* @primaryColor */}
-      <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-column">
-          <label className="form-label small mb-0">Texto Primario</label>
-          <small className="fg-partial">
-            El color que tomara tu texto principal.
-          </small>
-        </div>
-        <div className="d-flex align-items-center gap-2">
-          <input
-            type="color"
-            name="primaryColor"
-            className="ipt form-control-plaintext p-0 rounded"
-            value={form.primaryColor}
-            onChange={handleChange}
-          />
-        </div>
-        <small className="fg-partial text-end">
-          {form.primaryColor.toUpperCase()}
-        </small>
-      </div>
+      <FormInput
+        label="Texto Primario"
+        caption="El color que tomara tu texto principal."
+        constraint={form.primaryColor.toUpperCase()}
+        name="primaryColor"
+        type="color"
+        value={form.primaryColor}
+        onChange={handleChange}
+      />
 
       {/* @backgroundColor */}
-      <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-column">
-          <label className="form-label small mb-0">Fondo Primario</label>
-          <small className="fg-partial">
-            El color que tomara tu fondo principal.
-          </small>
-        </div>
-        <div className="d-flex align-items-center gap-2">
-          <input
-            type="color"
-            name="backgroundColor"
-            className="ipt form-control-plaintext p-0 rounded"
-            value={form.backgroundColor}
-            onChange={handleChange}
-          />
-        </div>
-        <small className="fg-partial text-end">
-          {form.backgroundColor.toUpperCase()}
-        </small>
-      </div>
+      <FormInput
+        label="Fondo Primario"
+        caption="El color que tomara tu fondo principal."
+        constraint={form.backgroundColor.toUpperCase()}
+        name="backgroundColor"
+        type="color"
+        value={form.backgroundColor}
+        onChange={handleChange}
+      />
+
+      <FormInput
+        label="Familia Tipográfica"
+        caption="La tipografía de tu perfil."
+        constraint=""
+        name="fontFamily"
+        type="select"
+        value={form.fontFamily}
+        itemArray={FONTS}
+        onChange={handleChange}
+      />
 
       {/* -Preview */}
       <div className="d-flex flex-column gap-1">
         <div className="d-flex flex-column">
           <label className="form-label small mb-0">Preview</label>
-          <small className="fg-partial">
-            Una ojeada a como quedaria tus colores en tu perfil.
-          </small>
+          <div className="d-flex flex-row justify-content-between">
+            <small className="fg-partial">
+              Una ojeada a como quedaria tus colores en tu perfil.
+            </small>
+            <small className="fg-partial text-end">¿Que te parece?</small>
+          </div>
         </div>
         <div
-          className="d-flex flex-column align-items-center gap-2 rounded p-4 bdr-surface"
+          className="d-flex flex-column align-items-center gap-2 p-5 bdr-surface"
           style={{
             backgroundColor: form.backgroundColor,
             color: form.primaryColor,
+            fontFamily: form.fontFamily,
           }}
         >
           <h4 className="mb-0">Texto Primario sobre Fondo Primario</h4>
@@ -122,27 +119,16 @@ const ThemeEditor = () => {
             Texto Secundario con Fondo Secundario
           </p>
         </div>
-        <small className="fg-partial text-end">¿Que te parece?</small>
       </div>
-      <hr className="hr-surface my-0" />
 
       {/* #error, !submit */}
       <div className="d-flex flex-row flex-wrap align-items-center gap-3">
         {error && <p className="fg-error mb-0">Error. {error}</p>}
         {success && <p className="fg-success mb-0">Cambios guardados.</p>}
-        <button
-          type="submit"
-          className="sw sw-primary px-3 py-1 rounded ms-auto"
-          disabled={loading}
-        >
-          {loading ? (
-            <span className="spinner-border spinner-border-sm me-2" />
-          ) : null}
-          {loading ? "Guardando..." : "Guardar"}
-        </button>
+        <FormButton label="Guardar" loading={loading} type="submit" />
       </div>
     </form>
   );
-};
+}
 
-export default ThemeEditor;
+const FONTS = ["Fredoka", "Roboto", "Quicksand", "JetBrains Mono"];

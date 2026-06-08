@@ -15,7 +15,7 @@ export default function AuthLayout() {
           <i className="ri-user-smile-fill"></i> MeetMe
         </h2>
         <Outlet />
-        <small className="position-absolute bottom-0 end-0 p-3 w-100">
+        <small className="position-absolute bottom-0 end-0 p-3 w-100 text-end">
           © MeetMe 2026
         </small>
       </div>
