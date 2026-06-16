@@ -1,10 +1,10 @@
 // src/modules/dashboard/pages/DashboardPage.tsx
 import { useEffect, useState } from "react";
-import ProfileEditor from "../components/ProfileEditor.js";
-import SocialEditor from "../components/SocialEditor.js";
-import ThemeEditor from "../components/ThemeEditor.js";
-import { apiProfileService } from "../services/profile.service.js";
-import { useAuthStore } from "../../../store/auth.store.js";
+import ProfileEditor from "../components/ProfileEditor";
+import SocialEditor from "../components/SocialEditor";
+import ThemeEditor from "../components/ThemeEditor";
+import { useAuthStore } from "../../../store/auth.store";
+import { apiProfileService } from "../services/profile.api";
 
 export default function DashboardPage() {
   // Hooks

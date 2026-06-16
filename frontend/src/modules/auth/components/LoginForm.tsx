@@ -1,9 +1,10 @@
 // src/modules/auth/components/LoginForm.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../../store/auth.store.js";
+import { useAuthStore } from "../../../store/auth.store";
 import React from "react";
-import { apiAuthService } from "../services/auth.service.js";
+import { FormButton, FormInput } from "../../_common/FormComponents";
+import { apiAuthService } from "../services/auth.service";
 
 export default function LoginForm() {
   // Hooks
@@ -15,7 +16,11 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
 
   // Handlers
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -40,40 +45,34 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
       {/* @email */}
-      <div className="d-flex flex-column gap-1">
-        <input
-          type="email"
-          name="email"
-          className="ipt form-control-plaintext px-3 py-1 rounded"
-          placeholder="Correo"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-      </div>
+      <FormInput
+        label=""
+        caption=""
+        constraint=""
+        name="email"
+        type="email"
+        placeholder="Correo"
+        value={form.email}
+        onChange={handleChange}
+      />
       {/* @password */}
-      <div className="d-flex flex-column gap-1">
-        <input
-          type="password"
-          name="password"
-          className="ipt form-control-plaintext px-3 py-1 rounded"
-          placeholder="Clave"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-      </div>
+      <FormInput
+        label=""
+        caption=""
+        constraint=""
+        name="password"
+        type="password"
+        placeholder="Clave"
+        value={form.password}
+        onChange={handleChange}
+      />
       {/* !submit */}
-      <button
+      <FormButton
+        label="Iniciar Sesión"
+        labelLoading="ingresando..."
+        loading={loading}
         type="submit"
-        className="sw sw-primary px-3 py-1 w-100 rounded"
-        disabled={loading}
-      >
-        {loading ? (
-          <span className="spinner-border spinner-border-sm me-2" />
-        ) : null}
-        {loading ? "Ingresando..." : "Ingresar"}
-      </button>
+      />
       {/* #error.message */}
       {error && <small className="fg-error text-center">{error}</small>}
     </form>

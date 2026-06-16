@@ -18,6 +18,26 @@
   /* Estados */
 }
 
+.header-container {
+  background-color: transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.footer-container {
+  background-color: transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+
 /*#region - INIT */
 * {
   box-sizing: border-box;
@@ -64,18 +84,6 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   transition: background-color 600000s ease-in-out 0s;
   -webkit-text-fill-color: var(--fore-neutral);
-}
-
-.header-container {
-  background-color: transparent;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.footer-container {
-  background-color: transparent;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 /*#endregion*/

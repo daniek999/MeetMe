@@ -1,3 +1,4 @@
+// src/layouts/AuthLayout.tsx
 import { Outlet } from "react-router-dom";
 import "../ui/styles/layouts.css";
 

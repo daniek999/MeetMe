@@ -1,19 +1,20 @@
 // src/modules/profile/pages/PublicProfilePage.tsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../../store/auth.store.js";
-import ProfileCard from "../components/ProfileCard.js";
-import type { InteractionStatus, PublicUser } from "../../../types/index.js";
-import {
-  getInteractionStatusService,
-  getPublicProfileService,
-  shareService,
-  toggleFollowService,
-  toggleLikeService,
-} from "../services/profile.services.js";
+import { useAuthStore } from "../../../store/auth.store";
+import ProfileCard from "../components/ProfileCard";
+import type { InteractionStatus, PublicUser } from "../../../types/index";
+import { apiStatisticService } from "../services/statistic.api";
 
 export default function PublicProfilePage() {
   // Hooks
+  const {
+    getInteractionStatusService,
+    getPublicProfileService,
+    shareService,
+    toggleFollowService,
+    toggleLikeService,
+  } = apiStatisticService();
   const navigate = useNavigate();
   const { username } = useParams<{ username: string }>();
   const { isAuthenticated, user: authUser } = useAuthStore();

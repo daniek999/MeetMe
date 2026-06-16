@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/modules/profile/components/ProfileCard.tsx
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { InteractionStatus, PublicUser } from "../../../types";
 
 interface Props {

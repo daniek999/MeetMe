@@ -1,17 +1,6 @@
-// src/modules/dashboard/services/social.service.ts
-import api from "../../../api/axios.js";
-import type { ApiResponse, Social } from "../../../types/index.js";
-
-interface UpdateSocialInput {
-  youtubeUrl?: string | null;
-  twitterUrl?: string | null;
-  patreonUrl?: string | null;
-  discordUrl?: string | null;
-  instagramUrl?: string | null;
-  twitchUrl?: string | null;
-  linkedinUrl?: string | null;
-  websiteUrl?: string | null;
-}
+// src/api/social.service.ts
+import api from "../../../api/_axios";
+import type { ApiResponse, Social } from "../../../types";
 
 export function apiSocialService() {
   const getSocialService = async (): Promise<Social> => {
@@ -29,4 +18,15 @@ export function apiSocialService() {
     getSocialService,
     updateSocialService,
   };
+}
+
+interface UpdateSocialInput {
+  youtubeUrl?: string | null;
+  twitterUrl?: string | null;
+  patreonUrl?: string | null;
+  discordUrl?: string | null;
+  instagramUrl?: string | null;
+  twitchUrl?: string | null;
+  linkedinUrl?: string | null;
+  websiteUrl?: string | null;
 }

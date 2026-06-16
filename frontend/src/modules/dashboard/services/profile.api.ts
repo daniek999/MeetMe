@@ -1,14 +1,6 @@
-// src/modules/dashboard/services/profile.service.ts
-import api from "../../../api/axios.js";
-import type { ApiResponse, User } from "../../../types/index.js";
-
-interface UpdateProfileInput {
-  displayName?: string;
-  bio?: string;
-  content?: string;
-  avatarUrl?: string;
-  bannerUrl?: string;
-}
+// src/api/profile.service.ts
+import api from "../../../api/_axios";
+import type { ApiResponse, User } from "../../../types";
 
 export function apiProfileService() {
   const getMyProfileService = async (): Promise<User> => {
@@ -26,4 +18,12 @@ export function apiProfileService() {
     getMyProfileService,
     updateProfileService,
   };
+}
+
+interface UpdateProfileInput {
+  displayName?: string;
+  bio?: string;
+  content?: string;
+  avatarUrl?: string;
+  bannerUrl?: string;
 }

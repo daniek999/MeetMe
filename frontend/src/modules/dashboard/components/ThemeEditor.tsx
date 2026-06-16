@@ -1,8 +1,11 @@
 // src/modules/dashboard/components/ThemeEditor.tsx
-import { apiThemeService } from "../services/theme.service";
+import { apiThemeService } from "../services/theme.api";
+import {
+  FormButton,
+  FormInput,
+  FormPreview,
+} from "../../_common/FormComponents";
 import { useState, useEffect } from "react";
-import React from "react";
-import { FormButton, FormInput } from "./ProfileEditor";
 
 export default function ThemeEditor() {
   // Hooks
@@ -11,7 +14,6 @@ export default function ThemeEditor() {
     primaryColor: "#000000",
     backgroundColor: "#ffffff",
     fontFamily: "Fredoka",
-    layout: "classic",
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -26,7 +28,6 @@ export default function ThemeEditor() {
           primaryColor: theme.primaryColor,
           backgroundColor: theme.backgroundColor,
           fontFamily: theme.fontFamily,
-          layout: theme.layout,
         });
       } catch {
         setError("Failed to load theme");
@@ -96,39 +97,32 @@ export default function ThemeEditor() {
       />
 
       {/* -Preview */}
-      <div className="d-flex flex-column gap-1">
-        <div className="d-flex flex-column">
-          <label className="form-label small mb-0">Preview</label>
-          <div className="d-flex flex-row justify-content-between">
-            <small className="fg-partial">
-              Una ojeada a como quedaria tus colores en tu perfil.
-            </small>
-            <small className="fg-partial text-end">¿Que te parece?</small>
-          </div>
-        </div>
-        <div
-          className="d-flex flex-column align-items-center gap-2 p-5 bdr-surface"
-          style={{
-            backgroundColor: form.backgroundColor,
-            color: form.primaryColor,
-            fontFamily: form.fontFamily,
-          }}
-        >
-          <h4 className="mb-0">Texto Primario sobre Fondo Primario</h4>
-          <p className="mb-0 p-3 bg-surface py-1">
-            Texto Secundario con Fondo Secundario
-          </p>
-        </div>
-      </div>
+      <FormPreview
+        caption="Una ojeada a como quedaria tus colores en tu perfil."
+        form={form}
+        label="Preview"
+      />
 
       {/* #error, !submit */}
       <div className="d-flex flex-row flex-wrap align-items-center gap-3">
+        <FormButton
+          label="Guardar"
+          labelLoading="Guardando..."
+          loading={loading}
+          type="submit"
+        />
         {error && <p className="fg-error mb-0">Error. {error}</p>}
         {success && <p className="fg-success mb-0">Cambios guardados.</p>}
-        <FormButton label="Guardar" loading={loading} type="submit" />
       </div>
     </form>
   );
 }
 
-const FONTS = ["Fredoka", "Roboto", "Quicksand", "JetBrains Mono"];
+const FONTS = [
+  "Fredoka",
+  "Roboto",
+  "Quicksand",
+  "JetBrains Mono",
+  "Nunito",
+  "Share Tech Mono",
+];

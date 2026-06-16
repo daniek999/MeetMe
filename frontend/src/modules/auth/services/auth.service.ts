@@ -1,16 +1,6 @@
-// src/modules/auth/services/auth.service.ts
-import api from "../../../api/axios.js";
-import type { AuthData, AuthResponse } from "../../../types/index.js";
-
-interface RegisterInput {
-  username: string;
-  email: string;
-  password: string;
-}
-interface LoginInput {
-  email: string;
-  password: string;
-}
+// src/api/auth.service.ts
+import api from "../../../api/_axios";
+import type { AuthData, AuthResponse } from "../../../types";
 
 export function apiAuthService() {
   const registerService = async (input: RegisterInput): Promise<AuthData> => {
@@ -26,4 +16,14 @@ export function apiAuthService() {
     registerService,
     loginService,
   };
+}
+
+interface RegisterInput {
+  username: string;
+  email: string;
+  password: string;
+}
+interface LoginInput {
+  email: string;
+  password: string;
 }

@@ -1,12 +1,21 @@
 // src/modules/dashboard/components/SocialEditor.tsx
-import { apiSocialService } from "../services/social.service";
+import { apiSocialService } from "../services/social.api";
+import { FormButton, FormInput } from "../../_common/FormComponents";
 import { useState, useEffect } from "react";
-import { FormButton, FormInput } from "./ProfileEditor";
 
 export default function SocialEditor() {
   // Hooks
   const { getSocialService, updateSocialService } = apiSocialService();
-  const [form, setForm] = useState<SocialForm>({
+  const [form, setForm] = useState<{
+    youtubeUrl: string;
+    twitterUrl: string;
+    patreonUrl: string;
+    discordUrl: string;
+    instagramUrl: string;
+    twitchUrl: string;
+    linkedinUrl: string;
+    websiteUrl: string;
+  }>({
     youtubeUrl: "",
     twitterUrl: "",
     patreonUrl: "",
@@ -74,10 +83,10 @@ export default function SocialEditor() {
   return (
     <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
       {/* @youtubeUrl, @twitterUrl, @patreonUrl, @discordUrl, @instagramUrl, @twitchUrl, @linkedinUrl, @websiteUrl */}
-      {SOCIAL_FIELDS.map(({ name, label }) => (
+      {SOCIAL_FIELDS.map(({ name, label, caption }) => (
         <FormInput
           label={label}
-          caption=""
+          caption={caption}
           constraint=""
           name={name}
           type="url"
@@ -88,22 +97,26 @@ export default function SocialEditor() {
       ))}
       {/* #error, !submit */}
       <div className="d-flex flex-row flex-wrap align-items-center gap-3">
+        <FormButton
+          label="Guardar"
+          labelLoading="Guardando..."
+          loading={loading}
+          type="submit"
+        />
         {error && <p className="fg-error mb-0">Error. {error}</p>}
         {success && <p className="fg-success mb-0">Cambios guardados.</p>}
-        <FormButton label="Guardar" loading={loading} type="submit" />
       </div>
     </form>
   );
 }
 
 const SOCIAL_FIELDS = [
-  { name: "youtubeUrl", label: "YouTube" },
-  { name: "twitterUrl", label: "Twitter/X" },
-  { name: "patreonUrl", label: "Patreon" },
-  { name: "discordUrl", label: "Discord" },
-  { name: "instagramUrl", label: "Instagram" },
-  { name: "twitchUrl", label: "Twitch" },
-  { name: "linkedinUrl", label: "LinkedIn" },
-  { name: "websiteUrl", label: "Website" },
+  { name: "youtubeUrl", label: "YouTube", caption: "Tus videazos del yutuz." },
+  { name: "twitterUrl", label: "X", caption: "Anteriormente twitter." },
+  { name: "patreonUrl", label: "Patreon", caption: "Dame dinero." },
+  { name: "discordUrl", label: "Discord", caption: "..." },
+  { name: "instagramUrl", label: "Instagram", caption: "Pasen IG." },
+  { name: "twitchUrl", label: "Twitch", caption: "Estrims." },
+  { name: "linkedinUrl", label: "LinkedIn", caption: "Chamba." },
+  { name: "websiteUrl", label: "Website", caption: "Tu propia web personal." },
 ] as const;
-type SocialForm = Record<(typeof SOCIAL_FIELDS)[number]["name"], string>;

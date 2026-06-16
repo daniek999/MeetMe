@@ -1,9 +1,8 @@
 // src/types/index.ts
 export type UserRole = "user" | "admin";
 export type UserStatus = "enabled" | "suspended" | "banned";
-export type Layout = "classic" | "minimal" | "bold";
 
-// ─── Wrapper de respuesta base ────────────────────────
+// ─ wrapper: Basic Response ─
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
@@ -12,6 +11,23 @@ export interface ApiResponse<T> {
   };
 }
 
+// ─ wrapper: Auth Response ─
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  data: AuthData;
+}
+export interface AuthData {
+  item: {
+    id: number;
+    username: string;
+    email: string;
+    role: UserRole;
+  };
+  token: string;
+}
+
+// ─ model: User ─
 export interface User {
   id: number;
   username: string;
@@ -28,7 +44,6 @@ export interface User {
   statistic?: Statistic;
   theme?: Theme;
 }
-
 export interface PublicUser {
   id: number;
   username: string;
@@ -42,6 +57,7 @@ export interface PublicUser {
   theme?: Theme;
 }
 
+// ─ model: Social ─
 export interface Social {
   id: number;
   userId: number;
@@ -57,6 +73,7 @@ export interface Social {
   updatedAt?: string;
 }
 
+// ─ model: Statistic ─
 export interface Statistic {
   id: number;
   userId: number;
@@ -65,41 +82,21 @@ export interface Statistic {
   follows: number;
   shares: number;
 }
+export interface InteractionStatus {
+  liked: boolean;
+  followed: boolean;
+}
+export interface InteractionResult {
+  active: boolean;
+  type: "like" | "follow";
+}
 
+// ─ model: Theme ─
 export interface Theme {
   id: number;
   userId: number;
   primaryColor: string;
   backgroundColor: string;
   fontFamily: string;
-  layout: Layout; /** Eliminar */
   updatedAt?: string;
-}
-
-export interface InteractionStatus {
-  liked: boolean;
-  followed: boolean;
-}
-
-export interface InteractionResult {
-  active: boolean;
-  type: "like" | "follow";
-}
-
-export interface AuthItem {
-  id: number;
-  username: string;
-  email: string;
-  role: UserRole;
-}
-
-export interface AuthData {
-  item: AuthItem;
-  token: string;
-}
-
-export interface AuthResponse {
-  success: boolean;
-  message: string;
-  data: AuthData;
 }

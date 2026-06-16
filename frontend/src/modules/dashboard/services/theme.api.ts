@@ -1,13 +1,6 @@
-// src/modules/dashboard/services/theme.service.ts
-import api from "../../../api/axios.js";
-import type { ApiResponse, Theme } from "../../../types/index.js";
-
-interface UpdateThemeInput {
-  primaryColor?: string | null;
-  backgroundColor?: string | null;
-  fontFamily?: string | null;
-  layout?: string | null;
-}
+// src/api/theme.service.ts
+import api from "../../../api/_axios";
+import type { ApiResponse, Theme } from "../../../types";
 
 export function apiThemeService() {
   const getThemeService = async (): Promise<Theme> => {
@@ -25,4 +18,11 @@ export function apiThemeService() {
     getThemeService,
     updateThemeService,
   };
+}
+
+interface UpdateThemeInput {
+  primaryColor?: string | null;
+  backgroundColor?: string | null;
+  fontFamily?: string | null;
+  layout?: string | null;
 }

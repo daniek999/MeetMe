@@ -1,10 +1,12 @@
+// src/layouts/ProfileLayout.tsx
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { PublicUser } from "../types";
-import { getPublicProfileService } from "../modules/profile/services/profile.services";
+import { apiStatisticService } from "../modules/profile/services/statistic.api";
 
 export default function ProfileLayout() {
   // Hooks
+  const { getPublicProfileService } = apiStatisticService();
   const navigate = useNavigate();
   const { username } = useParams<{ username: string }>();
   const [profile, setProfile] = useState<PublicUser | null>(null);
@@ -14,7 +16,6 @@ export default function ProfileLayout() {
   // Handlers
   useEffect(() => {
     if (!username) return;
-
     const load = async () => {
       try {
         const data = await getPublicProfileService(username);
@@ -25,8 +26,8 @@ export default function ProfileLayout() {
         setLoading(false);
       }
     };
-
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   // Renders
@@ -50,8 +51,6 @@ export default function ProfileLayout() {
       </div>
     );
   }
-
-  // Renders
   return (
     <section
       className="min-vh-100 d-flex flex-column"
@@ -61,7 +60,7 @@ export default function ProfileLayout() {
         fontFamily: profile.theme?.fontFamily,
       }}
     >
-      <header className="header-container position-sticky top-0 z-1 py-2">
+      <header className="header-container py-2">
         <div className="container d-flex flex-row align-items-center gap-3">
           <h2 className="mb-0 fg-neutral mx-auto">
             <span
@@ -75,11 +74,9 @@ export default function ProfileLayout() {
           </h2>
         </div>
       </header>
-
       <Outlet />
-
-      <footer className="footer-container position-sticky bottom-0 z-1 py-2">
-        <div className="container d-flex flex-row align-items-center gap-2">
+      <footer className="footer-container py-2">
+        <div className="container d-flex flex-row align-items-center gap-3">
           <small className="mb-0 fg-partial mx-auto">© MeetMe 2026</small>
         </div>
       </footer>
